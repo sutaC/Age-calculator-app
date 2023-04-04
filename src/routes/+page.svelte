@@ -1,6 +1,10 @@
 <script lang="ts">
+	import { tweened } from 'svelte/motion';
+	import { cubicOut } from 'svelte/easing';
+
 	import InputField from '$lib/components/inputField.svelte';
 	import CustomForm from '$lib/components/customForm.svelte';
+
 	import type { ErrorField } from '$lib/components/inputField.svelte';
 
 	let day: number | undefined;
@@ -10,6 +14,10 @@
 	let daysFrom: number | undefined = undefined;
 	let monthsFrom: number | undefined = undefined;
 	let yearsFrom: number | undefined = undefined;
+
+	let daysTweened: any;
+	let monthsTweened: any;
+	let yearsTweened: any;
 
 	let errors: ErrorField[] = [];
 
@@ -57,6 +65,16 @@
 				yearsFrom = Math.floor(differenceDays / 365);
 				monthsFrom = Math.floor((differenceDays - yearsFrom * 365) / 31);
 				daysFrom = differenceDays - yearsFrom * 365 - monthsFrom * 31 - 1;
+
+				// Animate the values
+
+				yearsTweened = tweened(0, { duration: yearsFrom * 30, easing: cubicOut });
+				monthsTweened = tweened(0, { duration: monthsFrom * 30, easing: cubicOut });
+				daysTweened = tweened(0, { duration: daysFrom * 30, easing: cubicOut });
+
+				yearsTweened.set(yearsFrom);
+				monthsTweened.set(monthsFrom);
+				daysTweened.set(daysFrom);
 			}
 		}
 	};
@@ -84,9 +102,15 @@
 		/>
 	</CustomForm>
 
-	<h2><span class="value">{yearsFrom ? yearsFrom : '--'}</span>years</h2>
-	<h2><span class="value">{monthsFrom ? monthsFrom : '--'}</span>months</h2>
-	<h2><span class="value">{daysFrom ? daysFrom : '--'}</span>days</h2>
+	<h2>
+		<span class="value">{yearsFrom ? Math.floor($yearsTweened * 100) / 100 : '--'} </span>years
+	</h2>
+	<h2>
+		<span class="value">{monthsFrom ? Math.floor($monthsTweened * 100) / 100 : '--'} </span>months
+	</h2>
+	<h2>
+		<span class="value">{daysFrom ? Math.floor($daysTweened * 100) / 100 : '--'} </span>days
+	</h2>
 </main>
 
 <style>

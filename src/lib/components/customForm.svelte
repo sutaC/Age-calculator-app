@@ -1,4 +1,4 @@
-<form action="">
+<form on:submit|preventDefault>
 	<slot />
 
 	<button type="submit" />
@@ -9,11 +9,11 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		gap: 1rem;
+		gap: 0.5rem;
 
 		box-sizing: border-box;
 		margin-bottom: 1rem;
-		padding: 0.5rem;
+		padding: 1.5rem 0.2rem;
 
 		position: relative;
 
@@ -42,5 +42,15 @@
 	}
 	button:active {
 		background-color: var(--clr-Off-black);
+	}
+
+	@media (min-width: 450px) {
+		form {
+			justify-content: start;
+		}
+
+		button {
+			right: 0;
+		}
 	}
 </style>

@@ -1,12 +1,21 @@
+<script context="module" lang="ts">
+	export type ErrorField = { field: string; message: string };
+</script>
+
 <script lang="ts">
 	export let label: string = Math.random().toString();
 	export let placeholder: string = label;
+	export let error: ErrorField[] = [];
+
+	export let value: number | undefined = undefined;
 </script>
 
-<div class="field">
+<div class="field" class:error={error.length > 0}>
 	<label for={label}>{label}</label>
-	<input type="number" name={label} id={label} {placeholder} />
-	<p class="error">Error</p>
+	<input type="number" name={label} id={label} {placeholder} bind:value />
+	{#each error as err}
+		<p class="error-message">{err.message}</p>
+	{/each}
 </div>
 
 <style>
@@ -15,7 +24,11 @@
 		padding: 0;
 	}
 
-	div > * {
+	.field {
+		max-width: 4rem;
+	}
+
+	.field > * {
 		display: block;
 		width: 100%;
 	}
@@ -50,7 +63,24 @@
 		caret-color: var(--clr-Purple);
 	}
 
-	.error {
+	.error-message {
 		visibility: hidden;
+
+		font-size: 0.35rem;
+		font-weight: 400;
+		font-style: italic;
+	}
+
+	.error label,
+	.error-message {
+		color: var(--clr-Light-red);
+	}
+
+	.error input {
+		border-color: var(--clr-Light-red);
+	}
+
+	.error .error-message {
+		visibility: visible;
 	}
 </style>

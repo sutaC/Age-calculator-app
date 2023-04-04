@@ -1,18 +1,92 @@
 <script lang="ts">
 	import InputField from '$lib/components/inputField.svelte';
 	import CustomForm from '$lib/components/customForm.svelte';
+	import type { ErrorField } from '$lib/components/inputField.svelte';
+
+	let day: number | undefined;
+	let month: number | undefined;
+	let year: number | undefined;
+
+	let daysFrom: number | undefined = undefined;
+	let monthsFrom: number | undefined = undefined;
+	let yearsFrom: number | undefined = undefined;
+
+	let errors: ErrorField[] = [];
+
+	const handleSubmit = (e: SubmitEvent): void => {
+		errors = [];
+		daysFrom = undefined;
+		monthsFrom = undefined;
+		yearsFrom = undefined;
+
+		// Validation
+
+		if (!day) {
+			errors = [...errors, { field: 'day', message: 'This field is required' }];
+		} else if (day < 1 || 31 < day) {
+			errors = [...errors, { field: 'day', message: 'Must be valid day' }];
+		}
+
+		if (!month) {
+			errors = [...errors, { field: 'month', message: 'This field is required' }];
+		} else if (month < 1 || 12 < month) {
+			errors = [...errors, { field: 'month', message: 'Must be valid month' }];
+		}
+
+		if (!year) {
+			errors = [...errors, { field: 'year', message: 'This field is required' }];
+		} else if (year > new Date().getFullYear()) {
+			errors = [...errors, { field: 'year', message: 'Must be in the past' }];
+		}
+
+		if (year && month && day) {
+			if (day > new Date(year, month, 0).getDate()) {
+				errors = [...errors, { field: 'day', message: 'Must be valid date' }];
+				errors = [...errors, { field: 'month', message: '' }];
+				errors = [...errors, { field: 'year', message: '' }];
+			}
+
+			// Setting values
+
+			if (errors.length === 0) {
+				const then = new Date(year, month, day);
+				const now = new Date();
+				const difference = now.getTime() - then.getTime();
+				const differenceDays = Math.ceil(difference / (1000 * 3600 * 24));
+
+				yearsFrom = Math.floor(differenceDays / 365);
+				monthsFrom = Math.floor((differenceDays - yearsFrom * 365) / 31);
+				daysFrom = differenceDays - yearsFrom * 365 - monthsFrom * 31 - 1;
+			}
+		}
+	};
 </script>
 
 <main>
-	<CustomForm>
-		<InputField label="Day" placeholder="DD" />
-		<InputField label="Month" placeholder="MM" />
-		<InputField label="Year" placeholder="YYYY" />
+	<CustomForm on:submit={handleSubmit}>
+		<InputField
+			label="Day"
+			placeholder="DD"
+			bind:value={day}
+			error={errors.filter((err) => err.field === 'day')}
+		/>
+		<InputField
+			label="Month"
+			placeholder="MM"
+			bind:value={month}
+			error={errors.filter((err) => err.field === 'month')}
+		/>
+		<InputField
+			label="Year"
+			placeholder="YYYY"
+			bind:value={year}
+			error={errors.filter((err) => err.field === 'year')}
+		/>
 	</CustomForm>
 
-	<h2><span class="value">----</span>years</h2>
-	<h2><span class="value">--</span>months</h2>
-	<h2><span class="value">--</span>days</h2>
+	<h2><span class="value">{yearsFrom ? yearsFrom : '--'}</span>years</h2>
+	<h2><span class="value">{monthsFrom ? monthsFrom : '--'}</span>months</h2>
+	<h2><span class="value">{daysFrom ? daysFrom : '--'}</span>days</h2>
 </main>
 
 <style>
@@ -43,7 +117,7 @@
 
 		box-sizing: border-box;
 		margin: 0;
-		padding: 1rem;
+		padding: 0.3rem;
 
 		background-color: var(--clr-Off-white);
 	}
@@ -51,7 +125,7 @@
 	/* Main styles */
 
 	main {
-		max-width: 20rem;
+		max-width: 16rem;
 
 		padding: 0.5rem;
 
@@ -59,12 +133,14 @@
 		border-bottom-right-radius: 4rem;
 
 		background-color: var(--clr-White);
+
+		flex: 1;
 	}
 
 	h2 {
 		margin: 0 0.5rem;
 
-		font-size: 1.6em;
+		font-size: 1.3rem;
 		font-weight: 700;
 		font-style: italic;
 	}

@@ -57,14 +57,17 @@
 			// Setting values
 
 			if (errors.length === 0) {
-				const then = new Date(year, month, day);
-				const now = new Date();
-				const difference = now.getTime() - then.getTime();
-				const differenceDays = Math.ceil(difference / (1000 * 3600 * 24));
+				const then: Date = new Date(year, month, day);
+				const now: Date = new Date();
 
-				yearsFrom = Math.floor(differenceDays / 365);
-				monthsFrom = Math.floor((differenceDays - yearsFrom * 365) / 31);
-				daysFrom = differenceDays - yearsFrom * 365 - monthsFrom * 31 - 1;
+				// Calculate time
+
+				const diffInMilliseconds = Math.abs(now.getTime() - then.getTime());
+				const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
+
+				yearsFrom = Math.floor(diffInDays / 365);
+				monthsFrom = Math.floor((diffInDays % 365) / 30);
+				daysFrom = Math.floor(diffInDays % 30);
 
 				// Animate the values
 

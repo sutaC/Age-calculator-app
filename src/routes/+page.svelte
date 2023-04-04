@@ -164,7 +164,7 @@
 	h2 {
 		margin: 0 0.5rem;
 
-		font-size: 1.3rem;
+		font-size: 1rem;
 		font-weight: 700;
 		font-style: italic;
 	}
@@ -173,5 +173,11 @@
 		font-weight: 800;
 		color: var(--clr-Purple);
 		margin: 0.3rem;
+	}
+
+	@media (min-width: 450px) {
+		h2 {
+			font-size: 2rem;
+		}
 	}
 </style>

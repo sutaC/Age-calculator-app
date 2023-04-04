@@ -68,9 +68,9 @@
 
 				// Animate the values
 
-				yearsTweened = tweened(0, { duration: yearsFrom * 30, easing: cubicOut });
-				monthsTweened = tweened(0, { duration: monthsFrom * 30, easing: cubicOut });
-				daysTweened = tweened(0, { duration: daysFrom * 30, easing: cubicOut });
+				yearsTweened = tweened(0, { duration: 700, easing: cubicOut });
+				monthsTweened = tweened(0, { duration: 700, easing: cubicOut });
+				daysTweened = tweened(0, { duration: 700, easing: cubicOut });
 
 				yearsTweened.set(yearsFrom);
 				monthsTweened.set(monthsFrom);
@@ -103,13 +103,19 @@
 	</CustomForm>
 
 	<h2>
-		<span class="value">{yearsFrom ? Math.floor($yearsTweened * 100) / 100 : '--'} </span>years
+		<span class="value"
+			>{yearsFrom !== undefined ? Math.floor($yearsTweened * 100) / 100 : '--'}
+		</span>years
 	</h2>
 	<h2>
-		<span class="value">{monthsFrom ? Math.floor($monthsTweened * 100) / 100 : '--'} </span>months
+		<span class="value"
+			>{monthsFrom !== undefined ? Math.floor($monthsTweened * 100) / 100 : '--'}
+		</span>months
 	</h2>
 	<h2>
-		<span class="value">{daysFrom ? Math.floor($daysTweened * 100) / 100 : '--'} </span>days
+		<span class="value"
+			>{daysFrom !== undefined ? Math.floor($daysTweened * 100) / 100 : '--'}
+		</span>days
 	</h2>
 </main>
 
